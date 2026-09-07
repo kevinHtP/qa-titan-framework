@@ -1,0 +1,1 @@
+{"uuid": "30115208-e236-4dc5-b710-4b88443f1cd8", "befores": [{"name": "pytestbdd_stepdef_given_Saya berada di halaman Saucedemo", "status": "passed", "start": 1788783866983, "stop": 1788783866991}], "afters": [{"name": "pytestbdd_stepdef_given_Saya berada di halaman Saucedemo::<lambda>", "start": 1788783882323}], "start": 1788783866983, "stop": 1788783882323}

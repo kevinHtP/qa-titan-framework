@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import allure 
 import pytest
 from pytest_bdd import scenario, given, when, then, parsers
 from playwright.sync_api import Page
@@ -17,6 +18,9 @@ def buka_halaman_utama(page: Page):
     print("\n[BDD] GIVEN: Membuka Saucedemo...")
     page.goto("https://www.saucedemo.com/")
 
+    # Bonus: Ambil screenshot otomatis dan lampirkan ke Allure Report!
+    allure.attach(page.screenshot(full_page = True), name="Halaman Login", attachment_type= allure.attachment_type.PNG)
+
 @when(parsers.parse('Saya login menggunakan {username} dan {password}'))
 def proses_login(page: Page, username, password):
     print(f"[BDD] WHEN: Login dengan user '{username}'...")
@@ -28,6 +32,8 @@ def proses_login(page: Page, username, password):
 def validasi_harga(page: Page, nama_produk, harga_harapan):
     print(f"[BDD] THEN: Memvalidasi harga '{nama_produk}'...")
     teks_harga = page.locator(f".inventory_item:has-text('{nama_produk}') .inventory_item_price").inner_text()
+
+    allure.attach(page.screenshot(full_page = True), name = "Halaman Inventarsis", attachment_type= allure.attachment_type.PNG)
     
     assert teks_harga == harga_harapan, f"Gagal! Diharapkan {harga_harapan}, tapi muncul {teks_harga}"
     print(f"       ✅ Sukses: Harga sesuai!")
