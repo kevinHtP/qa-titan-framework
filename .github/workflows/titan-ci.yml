@@ -1,0 +1,32 @@
+name: Titan Framework CI
+
+# Robot akan berjalan otomatis setiap kali ada kode yang di-push ke branch 'main'
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  automation-tests:
+    # Kita menyewa server Linux gratis dari GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 🐳 Build Docker Image
+      run: docker build -t qa-titan-framework .
+
+    - name: 🚀 Run Tests in Docker
+      # Menjalankan kontainer dan melempar hasil Allure ke server GitHub
+      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results qa-titan-framework
+
+    - name: 📊 Upload Allure Results Artifact
+      uses: actions/upload-artifact@v4
+      if: always() # Tetap simpan laporan meskipun ada tes yang FAILED
+      with:
+        name: allure-results
+        path: allure-results/
+        retention-days: 7
