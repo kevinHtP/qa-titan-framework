@@ -21,7 +21,7 @@ jobs:
 
     - name: 🚀 Run Tests in Docker
       # Menjalankan kontainer dan melempar hasil Allure ke server GitHub
-      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results qa-titan-framework
+      run: docker run --rm -e GEMINI_API_KEY="${{ secrets.GEMINI_API_KEY }}" -v /home/runner/work/qa-titan-framework/qa-titan-framework/allure-results:/app/allure-results qa-titan-framework
 
     - name: 📊 Upload Allure Results Artifact
       uses: actions/upload-artifact@v4
