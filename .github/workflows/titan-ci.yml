@@ -1,47 +1,38 @@
-name: Titan Framework CI
+name: Titan Framework CI/CD
 
-# Robot akan berjalan otomatis setiap kali ada kode yang di-push ke branch 'main'
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-  automation-tests:
-    # Kita menyewa server Linux gratis dari GitHub
+  test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 📥 Checkout Repository
+    - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: 🐳 Build Docker Image
-      run: docker build -t qa-titan-framework .
-
-    - name: 🚀 Run Tests in Docker
-      # Menjalankan kontainer dan melempar hasil Allure ke server GitHub
-      run: docker run --rm -e GEMINI_API_KEY="${{ secrets.GEMINI_API_KEY }}" -v /home/runner/work/qa-titan-framework/qa-titan-framework/allure-results:/app/allure-results qa-titan-framework
-
-    - name: 📊 Upload Allure Results Artifact
-      uses: actions/upload-artifact@v4
-      if: always() # Tetap simpan laporan meskipun ada tes yang FAILED
+    - name: Set up Python
+      uses: actions/setup-python@v5
       with:
-        name: allure-results
-        path: allure-results/
-        retention-days: 7
-  security-scan:
-      runs-on: ubuntu-latest
-      name: 🛡️ Security Scan (OWASP ZAP)
+        python-version: '3.11'
 
-      permissions:
-        issues: write
-      
-      steps:
-        - name: 📥 Checkout Repository
-          uses: actions/checkout@v4
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        playwright install
 
-        - name: 🕷️ Run OWASP ZAP Baseline Scan
-          uses: zaproxy/action-baseline@v0.15.0
-          with:
-            target: 'https://www.saucedemo.com'
+    - name: Run OWASP Juice Shop in Background (Docker)
+      run: |
+        docker run -d -p 3000:3000 bkimminich/juice-shop
+        # Berikan waktu 15 detik agar server lokal benar-benar siap menerima koneksi
+        sleep 15
+
+    - name: Run Pytest Security & UI Automation
+      env:
+        GEMINI_AI_KEY: ${{ secrets.GEMINI_API_KEY }}
+      run: |
+        pytest tests/test_security_login.py -v
