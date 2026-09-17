@@ -35,17 +35,18 @@ docker run --rm -p 3000:3000 bkimminich/juice-shop
 2. Setup the Framework
 Clone this repository and install dependencies:
 
-Bash
+'''Bash
 git clone [https://github.com/USERNAME_KAMU/qa-titan-framework.git](https://github.com/USERNAME_KAMU/qa-titan-framework.git)
 cd qa-titan-framework
 pip install -r requirements.txt
+
 3. Configure AI Analyzer (Environment Variables)
 Create a .env file in the root directory and add your Google Gemini API key:
 
-Cuplikan kode
+'''Cuplikan kode
 GEMINI_API_KEY=your_gemini_api_key_here
 4. Execute the Test Suite
 Run the security and UI automation tests with headed browser visibility:
 
-Bash
+'''Bash
 pytest tests/test_security_login.py --headed -s
