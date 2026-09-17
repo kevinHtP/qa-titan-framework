@@ -33,6 +33,9 @@ jobs:
   security-scan:
       runs-on: ubuntu-latest
       name: 🛡️ Security Scan (OWASP ZAP)
+
+      permissions:
+        issues: write
       
       steps:
         - name: 📥 Checkout Repository
