@@ -33,6 +33,6 @@ jobs:
 
     - name: Run Pytest Security & UI Automation
       env:
-        GEMINI_AI_KEY: ${{ secrets.GEMINI_API_KEY }}
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       run: |
         pytest tests/test_security_login.py -v
