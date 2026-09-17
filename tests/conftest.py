@@ -1,9 +1,11 @@
 import pytest
+from dotenv import load_dotenv
 from google import genai
 import os
 
-api_key = os.getenv("GEMINI_API_KEY") 
-client = genai.Client(api_key=api_key)
+load_dotenv()
+API_KEY = os.getenv("GEMINI_API_KEY") 
+client = genai.Client(api_key=API_KEY)
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
